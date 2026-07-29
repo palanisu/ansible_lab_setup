@@ -1,0 +1,71 @@
+---
+# Run: ansible-playbook ansible/playbooks/04-variables-loops.yml
+- name: "Lab 04 — Variables, loops, conditionals & register"
+  hosts: all
+  become: true
+
+  vars:
+    lab_message: "Hello from Ansible!"
+    packages_to_install:
+      - curl
+      - vim
+      - tree
+      - jq
+
+    user_accounts:
+      - { name: alice, shell: /bin/bash }
+      - { name: bob,   shell: /bin/bash }
+
+  tasks:
+    - name: Print a simple variable
+      ansible.builtin.debug:
+        msg: "{{ lab_message }} | host={{ inventory_hostname }}"
+
+    - name: Install packages using loop
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages_to_install }}"
+      when: ansible_os_family == "Debian"
+
+    - name: Webserver-only task
+      ansible.builtin.copy:
+        content: "I am webserver {{ inventory_hostname }}\n"
+        dest: /tmp/role_info.txt
+      when: inventory_hostname in groups['webservers']
+
+    - name: DBserver-only task
+      ansible.builtin.copy:
+        content: "I am dbserver {{ inventory_hostname }}\n"
+        dest: /tmp/role_info.txt
+      when: inventory_hostname in groups['dbservers']
+
+    - name: Check disk usage and register output
+      ansible.builtin.command: df -h /
+      register: disk_output
+      changed_when: false
+
+    - name: Display disk usage
+      ansible.builtin.debug:
+        msg: "{{ disk_output.stdout_lines }}"
+
+    - name: Create lab user accounts
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell }}"
+        create_home: true
+        state: present
+      loop: "{{ user_accounts }}"
+
+    - name: Write summary file
+      ansible.builtin.copy:
+        content: |
+          Lab 04 Summary
+          ==============
+          Host:     {{ inventory_hostname }}
+          OS:       {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Group:    {{ group_names | join(', ') }}
+          Packages: {{ packages_to_install | join(', ') }}
+          Users:    {{ user_accounts | map(attribute='name') | join(', ') }}
+          Date:     {{ ansible_date_time.date }}
+        dest: /tmp/lab04_summary.txt

@@ -1,0 +1,43 @@
+# Managed by Ansible — DO NOT EDIT MANUALLY
+# Generated: {{ ansible_date_time.date }} | Host: {{ inventory_hostname }}
+
+user www-data;
+worker_processes {{ nginx_worker_processes | default(2) }};
+pid /run/nginx.pid;
+
+events {
+    worker_connections {{ nginx_worker_connections | default(768) }};
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    server_tokens off;
+
+    access_log /var/log/nginx/{{ inventory_hostname }}_access.log;
+    error_log  /var/log/nginx/{{ inventory_hostname }}_error.log warn;
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript;
+
+    server {
+        listen {{ http_port | default(80) }};
+        server_name {{ ansible_hostname }};
+        root   {{ document_root | default('/var/www/html') }};
+        index  index.html;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        location /health {
+            return 200 'OK - {{ inventory_hostname }} is healthy\n';
+            add_header Content-Type text/plain;
+        }
+
+        location /info {
+            return 200 'host={{ inventory_hostname }} port={{ http_port | default(80) }}\n';
+            add_header Content-Type text/plain;
+        }
+    }
+}

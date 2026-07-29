@@ -1,0 +1,6 @@
+---
+# Master playbook — runs all playbooks in order
+# Run: ansible-playbook ansible/playbooks/site.yml
+# Run specific tags: ansible-playbook ansible/playbooks/site.yml --tags verify
+- import_playbook: 01-ping-test.yml
+- import_playbook: 03-install-nginx.yml

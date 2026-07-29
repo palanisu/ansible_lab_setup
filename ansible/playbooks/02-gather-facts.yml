@@ -1,0 +1,37 @@
+---
+# Run: ansible-playbook ansible/playbooks/02-gather-facts.yml
+# Run on one host: ansible-playbook ansible/playbooks/02-gather-facts.yml --limit web01
+- name: "Lab 02 — Gather & display system facts"
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Display OS info
+      ansible.builtin.debug:
+        msg: >
+          Host={{ inventory_hostname }}
+          OS={{ ansible_distribution }} {{ ansible_distribution_version }}
+          Kernel={{ ansible_kernel }}
+
+    - name: Display network info
+      ansible.builtin.debug:
+        msg: >
+          Host={{ inventory_hostname }}
+          IP={{ ansible_default_ipv4.address }}
+          Interface={{ ansible_default_ipv4.interface }}
+
+    - name: Display memory info
+      ansible.builtin.debug:
+        msg: >
+          Host={{ inventory_hostname }}
+          Total RAM={{ (ansible_memtotal_mb / 1024) | round(1) }} GB
+
+    - name: Save facts summary to node
+      ansible.builtin.copy:
+        content: |
+          # Ansible fact summary — {{ ansible_date_time.date }}
+          HOSTNAME={{ ansible_hostname }}
+          OS={{ ansible_distribution }} {{ ansible_distribution_version }}
+          IP={{ ansible_default_ipv4.address }}
+          PYTHON={{ ansible_python_version }}
+        dest: /tmp/ansible_facts.txt
+        mode: '0644'

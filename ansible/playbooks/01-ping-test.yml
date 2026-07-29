@@ -1,0 +1,17 @@
+---
+# Run: ansible-playbook ansible/playbooks/01-ping-test.yml
+- name: "Lab 01 — Verify connectivity to all managed nodes"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ping all managed nodes
+      ansible.builtin.ping:
+
+    - name: Get hostname of each node
+      ansible.builtin.command: hostname
+      changed_when: false
+      register: node_hostname
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} ({{ ansible_host }}) is UP — hostname: {{ node_hostname.stdout }}"

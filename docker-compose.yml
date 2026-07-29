@@ -1,0 +1,79 @@
+# =================================================================
+# DevOps Training Lab v2 — Docker Compose
+# Services:
+#   devcontainer  – Control node (VS Code attaches here)
+#   web01         – Managed node, webservers group, 172.20.0.21
+#   web02         – Managed node, webservers group, 172.20.0.22
+#   db01          – Managed node, dbservers  group, 172.20.0.23
+#
+# Start: VS Code "Reopen in Container" handles everything.
+#        post-create.sh auto-configures SSH keys.
+# =================================================================
+version: "3.9"
+
+networks:
+  lab-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+services:
+
+  devcontainer:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+    image: devops-lab-control:v2
+    container_name: devops-control
+    hostname: control-node
+    networks:
+      lab-network:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - .:/workspace:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - ANSIBLE_CONFIG=/workspace/ansible/ansible.cfg
+      - ANSIBLE_INVENTORY=/workspace/ansible/inventory.yml
+    command: sleep infinity
+    depends_on:
+      - web01
+      - web02
+      - db01
+
+  web01:
+    build:
+      context: managed-nodes
+      dockerfile: Dockerfile.managed
+    image: devops-lab-managed:v2
+    container_name: lab-web01
+    hostname: web01
+    networks:
+      lab-network:
+        ipv4_address: 172.20.0.21
+    restart: unless-stopped
+
+  web02:
+    build:
+      context: managed-nodes
+      dockerfile: Dockerfile.managed
+    image: devops-lab-managed:v2
+    container_name: lab-web02
+    hostname: web02
+    networks:
+      lab-network:
+        ipv4_address: 172.20.0.22
+    restart: unless-stopped
+
+  db01:
+    build:
+      context: managed-nodes
+      dockerfile: Dockerfile.managed
+    image: devops-lab-managed:v2
+    container_name: lab-db01
+    hostname: db01
+    networks:
+      lab-network:
+        ipv4_address: 172.20.0.23
+    restart: unless-stopped

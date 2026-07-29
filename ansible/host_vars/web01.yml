@@ -1,0 +1,4 @@
+---
+# web01 specific overrides
+server_alias:   primary
+is_primary_web: true

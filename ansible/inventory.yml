@@ -1,0 +1,30 @@
+---
+# =================================================================
+# Inventory — DevOps Training Lab v2
+# Managed nodes are Docker containers on 172.20.0.x
+# =================================================================
+all:
+  children:
+
+    webservers:
+      hosts:
+        web01:
+          ansible_host: 172.20.0.21
+          http_port: 80
+          server_role: primary_web
+        web02:
+          ansible_host: 172.20.0.22
+          http_port: 8080
+          server_role: secondary_web
+
+    dbservers:
+      hosts:
+        db01:
+          ansible_host: 172.20.0.23
+          db_port: 5432
+          db_engine: postgresql
+
+    production:
+      children:
+        webservers:
+        dbservers:

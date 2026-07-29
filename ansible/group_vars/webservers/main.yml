@@ -1,0 +1,6 @@
+---
+# Applies to webservers group only
+webserver_package:       nginx
+document_root:           /var/www/html
+nginx_worker_processes:  2
+nginx_worker_connections: 768
