@@ -1,0 +1,40 @@
+# SSH private keys — NEVER commit
+.ssh/
+*.pem
+*_rsa
+*_ed25519
+!*.pub
+.vault_pass
+vault_pass.txt
+*.vault
+ansible/vault/
+
+# Ansible
+*.retry
+.molecule/
+
+# Python
+__pycache__/
+*.pyc
+*.pyd
+.Python
+.venv/
+venv/
+*.egg-info/
+
+# VS Code local (keep tasks.json and extensions.json)
+.vscode/settings.json
+.vscode/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+logs/
+.pytest_cache/

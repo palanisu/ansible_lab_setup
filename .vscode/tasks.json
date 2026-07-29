@@ -1,0 +1,101 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🔵 Ansible: Ping all nodes",
+      "type": "shell",
+      "command": "ansible all -m ping",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔵 Ansible: Show inventory tree",
+      "type": "shell",
+      "command": "ansible-inventory --graph --vars",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔵 Ansible: Gather facts from all nodes",
+      "type": "shell",
+      "command": "ansible-playbook ansible/playbooks/02-gather-facts.yml",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔵 Ansible: Install nginx on webservers",
+      "type": "shell",
+      "command": "ansible-playbook ansible/playbooks/03-install-nginx.yml",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔵 Ansible: Dry-run nginx install (--check --diff)",
+      "type": "shell",
+      "command": "ansible-playbook ansible/playbooks/03-install-nginx.yml --check --diff",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔵 Ansible: Variables and loops demo",
+      "type": "shell",
+      "command": "ansible-playbook ansible/playbooks/04-variables-loops.yml",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🌿 Git Lab 1: Start (Commits & Staging)",
+      "type": "shell",
+      "command": "bash git-labs/lab1-setup.sh",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🌿 Git Lab 2: Start (Branching & Conflicts)",
+      "type": "shell",
+      "command": "bash git-labs/lab2-setup.sh",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🌿 Git Lab 3: Start (Interactive Rebase)",
+      "type": "shell",
+      "command": "bash git-labs/lab3-setup.sh",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🌿 Git Lab 4: Start (GitFlow)",
+      "type": "shell",
+      "command": "bash git-labs/lab4-setup.sh",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔄 Lab Reset: Clean managed nodes",
+      "type": "shell",
+      "command": "bash scripts/lab-reset.sh",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "ℹ️  Show lab container status",
+      "type": "shell",
+      "command": "docker ps --filter 'name=lab-' --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "new", "clear": true },
+      "problemMatcher": []
+    }
+  ]
+}

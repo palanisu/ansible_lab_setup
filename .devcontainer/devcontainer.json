@@ -1,0 +1,49 @@
+{
+  "name": "DevOps Training Lab v2",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.ansible",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens",
+        "ms-azure-devops.azure-pipelines",
+        "ms-azuretools.vscode-docker",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "ms-python.python"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.fontSize": 14,
+        "editor.fontSize": 14,
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "files.trimTrailingWhitespace": true,
+        "ansible.python.interpreterPath": "/usr/bin/python3",
+        "ansible.validation.enabled": true,
+        "ansible.validation.lint.enabled": true,
+        "[yaml]": { "editor.defaultFormatter": "redhat.vscode-yaml" },
+        "git.autofetch": true,
+        "gitlens.hovers.currentLine.over": "line"
+      }
+    }
+  },
+  "postCreateCommand": "bash /workspace/scripts/post-create.sh",
+  "postStartCommand":  "bash /workspace/scripts/post-start.sh",
+  "forwardPorts": [80, 8080],
+  "portsAttributes": {
+    "80":   {"label": "web01 nginx", "onAutoForward": "silent"},
+    "8080": {"label": "web02 nginx", "onAutoForward": "silent"}
+  },
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "ANSIBLE_CONFIG":    "/workspace/ansible/ansible.cfg",
+    "ANSIBLE_INVENTORY": "/workspace/ansible/inventory.yml",
+    "LAB_VERSION":       "2.0"
+  }
+}
